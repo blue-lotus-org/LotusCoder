@@ -1014,8 +1014,8 @@ pm2 start ecosystem.config.js
 
 #### 3. Professional Support
 For enterprise support, commercial licensing, or custom development:
-- Contact: [your-contact-email]
-- Website: [your-website]
+- Contact: [---]
+- Website: [https://lotuschain.org]
 
 ---
 
