@@ -1,0 +1,36 @@
+{
+  "name": "lotusagi",
+  "version": "1.0.0",
+  "description": "AI-powered coding assistant with multi-agent system and plugin ecosystem",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:install": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "start": "cd backend && npm run start:prod",
+    "setup": "npm run setup:env && npm run setup:db",
+    "setup:env": "cp .env.example .env && echo 'Environment file created. Please edit .env with your API keys.'",
+    "setup:db": "echo 'Setting up database...' && (sudo -u postgres createdb lotusagi 2>/dev/null || echo 'Database might already exist')",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "clean": "npm run clean:frontend && npm run clean:backend",
+    "install:full": "npm run install:full:deps && npm run setup",
+    "install:full:deps": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "install:plugin": "cd backend && npm install axios cheerio && cd ..",
+    "verify": "bash verify-setup.sh",
+    "docs": "echo 'Documentation available at DEVELOPER_GUIDE.md'",
+    "clean:frontend": "cd frontend && rm -rf dist node_modules",
+    "clean:backend": "cd backend && rm -rf dist node_modules",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

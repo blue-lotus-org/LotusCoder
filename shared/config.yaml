@@ -1,0 +1,453 @@
+# LotusAGI Configuration
+# This file contains all settings for the AI-powered coding assistant
+
+# Application Settings
+app:
+  name: "LotusAGI"
+  version: "1.0.0"
+  description: "AI-powered coding assistant with multi-agent system and plugin ecosystem"
+  port: 3001
+  host: "localhost"
+  environment: "development"
+
+# AI Provider Settings
+ai:
+  providers:
+    # Primary OpenAI-compatible providers
+    openai:
+      api_key: "${OPENAI_API_KEY}"
+      api_endpoint: "https://api.openai.com/v1"
+      model: "gpt-4"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: true
+      timeout: 60000
+      retry_attempts: 3
+      
+    claude:
+      api_key: "${CLAUDE_API_KEY}"
+      api_endpoint: "https://api.anthropic.com"
+      model: "claude-3-sonnet-20240229"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: true
+      timeout: 60000
+      retry_attempts: 3
+      
+    # Custom OpenAI-compatible providers
+    custom_1:
+      name: "Custom Provider 1"
+      api_key: "${CUSTOM_1_API_KEY}"
+      api_endpoint: "${CUSTOM_1_API_ENDPOINT}"
+      model: "${CUSTOM_1_MODEL}"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: true
+      timeout: 60000
+      retry_attempts: 3
+      headers: "${CUSTOM_1_HEADERS}"  # Additional headers as JSON
+      
+    custom_2:
+      name: "Custom Provider 2"
+      api_key: "${CUSTOM_2_API_KEY}"
+      api_endpoint: "${CUSTOM_2_API_ENDPOINT}"
+      model: "${CUSTOM_2_MODEL}"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: false
+      timeout: 60000
+      retry_attempts: 3
+      headers: "${CUSTOM_2_HEADERS}"
+      
+    custom_3:
+      name: "Custom Provider 3"
+      api_key: "${CUSTOM_3_API_KEY}"
+      api_endpoint: "${CUSTOM_3_API_ENDPOINT}"
+      model: "${CUSTOM_3_MODEL}"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: false
+      timeout: 60000
+      retry_attempts: 3
+      headers: "${CUSTOM_3_HEADERS}"
+      
+    # Local/Ollama providers
+    ollama:
+      api_key: "${OLLAMA_API_KEY}"  # Usually empty for local
+      api_endpoint: "http://localhost:11434/v1"
+      model: "${OLLAMA_MODEL}"
+      max_tokens: 4000
+      temperature: 0.7
+      enabled: false
+      timeout: 300000  # 5 minutes for local models
+      retry_attempts: 1
+      
+    # Local fallback models
+    local:
+      model_path: "./models/local-model"
+      enabled: false
+      gpu_enabled: false
+      max_memory_mb: 4096
+  
+  # Agent-specific configurations
+  agents:
+    manager:
+      primary_provider: "openai"
+      secondary_provider: "claude"
+      temperature: 0.3
+      max_tokens: 2000
+    planning:
+      primary_provider: "openai"
+      temperature: 0.5
+      max_tokens: 3000
+    code_generation:
+      primary_provider: "openai"
+      secondary_provider: "custom_1"  # Fallback provider
+      temperature: 0.2
+      max_tokens: 4000
+      fallback_enabled: true
+      parallel_requests: 2
+    review:
+      primary_provider: "claude"
+      temperature: 0.4
+      max_tokens: 3000
+    testing:
+      primary_provider: "openai"
+      temperature: 0.1
+      max_tokens: 2000
+
+# Multi-Agent System Settings
+agents:
+  enabled: true
+  max_concurrent: 5
+  retry_attempts: 3
+  timeout_ms: 300000  # 5 minutes
+  queue_bull: true
+  worker_threads: true
+  
+  # GPU/CPU Performance Settings
+  performance:
+    gpu_enabled: true
+    gpu_threads: 4  # Number of GPU threads to utilize
+    gpu_memory_fraction: 0.8  # GPU memory usage limit (0.0-1.0)
+    cpu_threads: 8  # CPU thread pool size
+    batch_processing: true
+    batch_size: 5  # Number of tasks to process in parallel
+    
+    # CUDA/OpenCL Support
+    cuda_enabled: true
+    opencl_enabled: false
+    gpu_vendor: "auto"  # auto, nvidia, amd, intel
+    
+    # Memory Management
+    max_memory_mb: 8192  # Maximum memory usage
+    memory_growth: true  # Allow GPU memory growth
+    memory_fraction: 0.6  # CPU memory fraction for agent pool
+  
+  # Agent configurations
+  manager:
+    name: "ManagerAgent"
+    enabled: true
+    role: "catalyst"
+    description: "Central coordinator managing other agents"
+  planning:
+    name: "PlanningAgent"
+    enabled: true
+    role: "task_planner"
+    description: "Breaks down tasks into subtasks"
+  code_generation:
+    name: "CodeGenerationAgent"
+    enabled: true
+    role: "developer"
+    description: "Generates frontend and backend code"
+  review:
+    name: "ReviewAgent"
+    enabled: true
+    role: "quality_assurance"
+    description: "Reviews and optimizes code"
+  testing:
+    name: "TestingAgent"
+    enabled: true
+    role: "tester"
+    description: "Creates and runs tests"
+  deployment:
+    name: "DeploymentAgent"
+    enabled: true
+    role: "deployer"
+    description: "Handles build and deployment"
+
+# Frontend Settings
+frontend:
+  port: 3000
+  hot_reload: true
+  live_preview: true
+  browser_output: true
+  
+  # Monaco Editor settings
+  editor:
+    theme: "vs-dark"
+    font_size: 14
+    font_family: "JetBrains Mono"
+    word_wrap: true
+    minimap: true
+    line_numbers: true
+    show_whitespace: true
+    
+  # UI Settings
+  ui:
+    theme: "dark"
+    sidebar_collapsed: false
+    resizable_panels: true
+    panel_sizes:
+      editor: 40
+      preview: 40
+      terminal: 20
+
+# Live Preview Settings
+live_preview:
+  enabled: true
+  auto_refresh: true
+  refresh_delay: 1000  # milliseconds
+  iframe_sandbox: true
+  cors_enabled: true
+  
+  # Build settings
+  build:
+    compiler: "esbuild"
+    minify: false
+    sourcemap: true
+    watch_files: ["src", "public"]
+
+# Database Settings
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  username: "ai_coding_app"
+  password: "${DB_PASSWORD}"
+  database: "ai_coding_app"
+  synchronize: true  # Auto-sync for development
+  logging: true
+
+# Redis Settings (for caching and task queue)
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+  key_prefix: "ai_coding_app:"
+
+# Security Settings
+security:
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+  rate_limiting:
+    enabled: true
+    window_ms: 60000  # 1 minute
+    max_requests: 100
+  
+  # File system security
+  allowed_extensions:
+    - ".js"
+    - ".ts"
+    - ".jsx"
+    - ".tsx"
+    - ".json"
+    - ".yaml"
+    - ".yml"
+    - ".md"
+    - ".css"
+    - ".html"
+  
+  max_file_size: "10MB"
+  upload_path: "./uploads"
+
+# Logging Settings
+logging:
+  level: "debug"
+  format: "json"
+  file: "logs/app.log"
+  max_files: 5
+  max_size: "100MB"
+  
+# Development Settings
+development:
+  hot_reload: true
+  debug_mode: true
+  inspector: false
+  mock_ai: false  # Set to true to use mock AI responses
+  
+# Export Settings
+export:
+  formats:
+    - "zip"
+    - "tar.gz"
+  default_format: "zip"
+  include_node_modules: false
+
+# Plugin System Configuration
+plugins:
+  enabled: true
+  auto_load: true
+  plugin_dir: "./plugins"
+  
+  # Available Plugins
+  available:
+    web_search:
+      name: "Web Search Plugin"
+      description: "Search the web for information and documentation"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        default_provider: "google"
+        rate_limit: 10  # requests per minute
+        timeout: 10000  # milliseconds
+        
+    web_scraper:
+      name: "Web Scraper Plugin"
+      description: "Extract content from websites and documentation"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        user_agent: "LotusAGI/1.0"
+        timeout: 15000
+        max_content_length: 100000  # characters
+        allowed_domains:
+          - "*.github.com"
+          - "*.stackoverflow.com"
+          - "*.stackoverflow.com"
+          - "*.mdn.mozilla.org"
+          - "*.reactjs.org"
+          - "*.angular.io"
+          - "*.vuejs.org"
+          - "*.nodejs.org"
+          - "*.python.org"
+          - "*.rust-lang.org"
+          - "*.go.dev"
+          - "*.go-lang.org"
+          
+    language_references:
+      name: "Programming Language References"
+      description: "Access documentation and syntax references for programming languages"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        languages:
+          - "javascript"
+          - "typescript"
+          - "python"
+          - "rust"
+          - "go"
+          - "java"
+          - "c++"
+          - "c#"
+          - "php"
+          - "ruby"
+          - "kotlin"
+          - "swift"
+          - "scala"
+          - "dart"
+          - "elixir"
+          - "clojure"
+        auto_update: true
+        update_frequency: "daily"
+        
+    package_manager:
+      name: "Package Manager Plugin"
+      description: "Search and install packages from various package managers"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        managers:
+          - "npm"
+          - "yarn"
+          - "pnpm"
+          - "pip"
+          - "cargo"
+          - "go"
+          - "maven"
+          - "gradle"
+          - "composer"
+          - "bundler"
+        search_apis:
+          npm: "https://registry.npmjs.org"
+          pypi: "https://pypi.org/pypi"
+          cargo: "https://crates.io/api/v1"
+          
+    git_integration:
+      name: "Git Integration Plugin"
+      description: "Git operations and repository management"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        default_branch: "main"
+        auto_commit: false
+        commit_message_template: "feat: {description}"
+        
+    code_formatter:
+      name: "Code Formatter Plugin"
+      description: "Format code according to language standards"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        formatters:
+          javascript: "prettier"
+          typescript: "prettier"
+          python: "black"
+          rust: "rustfmt"
+          go: "gofmt"
+          
+    documentation_generator:
+      name: "Documentation Generator Plugin"
+      description: "Generate documentation from code and comments"
+      version: "1.0.0"
+      enabled: true
+      author: "LotusAGI Team"
+      config:
+        formats:
+          - "javadoc"
+          - "jsdoc"
+          - "rustdoc"
+          - "godoc"
+          - "sphinx"
+          auto_detect: true
+
+# Notification Settings
+performance:
+  worker_threads: true
+  worker_count: 8  # Increased for better parallel processing
+  memory_limit: "4GB"  # Increased for larger models
+  cpu_threshold: 80  # percentage
+  
+  # GPU Acceleration Settings
+  gpu:
+    enabled: true
+    threads: 4
+    memory_fraction: 0.8
+    device_id: 0
+    allow_memory_growth: true
+    
+  # Advanced Performance Tuning
+  advanced:
+    async_processing: true
+    streaming_enabled: true
+    stream_buffer_size: 1024
+    compression_enabled: true
+    keep_alive_connections: 10
+
+# Notification Settings
+notifications:
+  enabled: true
+  types:
+    - "success"
+    - "error"
+    - "warning"
+    - "info"
+  duration: 5000  # milliseconds

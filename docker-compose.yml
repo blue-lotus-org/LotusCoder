@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: ai-coding-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ai_coding_app
+      POSTGRES_USER: ai_coding_app
+      POSTGRES_PASSWORD: your_secure_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_coding_app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache and Queue
+  redis:
+    image: redis:7-alpine
+    container_name: ai-coding-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass your_redis_password
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "your_redis_password", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Backend Service (optional, for production)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-coding-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ai_coding_app
+      DB_USER: ai_coding_app
+      DB_PASSWORD: your_secure_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: your_redis_password
+    volumes:
+      - ./shared:/app/shared:ro
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ai-coding-network
+
+  # Frontend Service (optional, for production)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-coding-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://backend:3001
+      VITE_WS_URL: ws://backend:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - ai-coding-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  ai-coding-network:
+    driver: bridge

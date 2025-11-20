@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Monaco Editor Styles */
+.monaco-editor {
+  @apply bg-dark-800;
+}
+
+.monaco-editor .margin {
+  @apply bg-dark-900;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-600 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dark-500;
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+}
+
+/* Code Block Styling */
+.code-block {
+  @apply bg-dark-800 text-dark-100 p-4 rounded-lg font-mono text-sm;
+}
+
+.code-block .keyword {
+  @apply text-primary-400;
+}
+
+.code-block .string {
+  @apply text-green-400;
+}
+
+.code-block .comment {
+  @apply text-dark-400 italic;
+}
+
+/* Loading Animation */
+.loading-spinner {
+  @apply animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500;
+}
+
+/* Agent Status Indicators */
+.agent-status {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.agent-status.healthy {
+  @apply bg-green-900 text-green-100;
+}
+
+.agent-status.busy {
+  @apply bg-yellow-900 text-yellow-100;
+}
+
+.agent-status.offline {
+  @apply bg-red-900 text-red-100;
+}
+
+/* Resizable Panel Styles */
+.resizable-panel {
+  @apply border border-dark-700 bg-dark-800;
+}
+
+.resizable-handle {
+  @apply bg-dark-600 hover:bg-primary-600 transition-colors;
+}
+
+/* Live Preview Styles */
+.live-preview-frame {
+  @apply w-full h-full border-0 bg-white;
+}
+
+.live-preview-overlay {
+  @apply absolute top-0 left-0 w-full h-full bg-primary-500 bg-opacity-10 pointer-events-none;
+}
+
+/* Task Progress Styles */
+.task-progress {
+  @apply w-full bg-dark-700 rounded-full h-2;
+}
+
+.task-progress-bar {
+  @apply bg-primary-500 h-2 rounded-full transition-all duration-300;
+}
+
+/* File Tree Styles */
+.file-tree-item {
+  @apply flex items-center p-2 hover:bg-dark-700 cursor-pointer transition-colors;
+}
+
+.file-tree-item.active {
+  @apply bg-primary-900 text-primary-100;
+}
+
+.file-tree-item .file-icon {
+  @apply mr-2 text-dark-400;
+}
+
+/* Chat Interface Styles */
+.chat-message {
+  @apply p-3 rounded-lg max-w-xs break-words;
+}
+
+.chat-message.user {
+  @apply bg-primary-600 text-white ml-auto;
+}
+
+.chat-message.agent {
+  @apply bg-dark-700 text-dark-100;
+}
+
+.chat-message.error {
+  @apply bg-red-900 text-red-100;
+}
+
+/* Notification Styles */
+.notification {
+  @apply fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 max-w-sm;
+}
+
+.notification.success {
+  @apply bg-green-900 text-green-100 border border-green-700;
+}
+
+.notification.error {
+  @apply bg-red-900 text-red-100 border border-red-700;
+}
+
+.notification.warning {
+  @apply bg-yellow-900 text-yellow-100 border border-yellow-700;
+}
+
+.notification.info {
+  @apply bg-blue-900 text-blue-100 border border-blue-700;
+}
